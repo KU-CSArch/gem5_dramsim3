@@ -8,10 +8,10 @@ E.g.
 
 Or
 Modify Professor's GEM5 running script to make proper cmd.sh to run with DRAMsim3
-
+'''
 # GEM5_CMD="$GEM5_CMD --mem-size=$MEM_SIZE  "
 GEM5_CMD="$GEM5_CMD --mem-type=DRAMsim3 --dramsim3-ini=/workspace/gem5/ext/dramsim3/DRAMsim3/configs/DDR4_8Gb_x8_3200.ini "  
-
+'''
 
 # The gem5 Simulator
 
