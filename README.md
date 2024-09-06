@@ -1,3 +1,18 @@
+# To run GEM5 with DRAMsim3 - added by Geonwoo, Seongpil, Taewoon
+### give options for running
+--mem-type=DRAMsim3
+--dramsim3-ini=/workspace/gem5/ext/dramsim3/DRAMsim3/configs/DDR4_8Gb_x8_3200.ini
+
+E.g.
+/workspace/gem5/build/X86/gem5.opt --outdir=/workspace/gem5/result_test /workspace/gem5/configs/deprecated/example/se.py --num-cpus=2 --cmd=/workspace/gem5/tests/test-progs/hello/bin/x86/linux/hello --options="" --cpu-type=DerivO3CPU --mem-type=DRAMsim3 --dramsim3-ini=/workspace/gem5/ext/dramsim3/DRAMsim3/configs/DDR4_8Gb_x8_3200.ini --caches --l2cache --l1i_size=16kB --l1d_size=16kB --l2_size=512kB
+
+Or
+Modify Professor's GEM5 running script to make proper cmd.sh to run with DRAMsim3
+
+# GEM5_CMD="$GEM5_CMD --mem-size=$MEM_SIZE  "
+GEM5_CMD="$GEM5_CMD --mem-type=DRAMsim3 --dramsim3-ini=/workspace/gem5/ext/dramsim3/DRAMsim3/configs/DDR4_8Gb_x8_3200.ini "  
+
+
 # The gem5 Simulator
 
 This is the repository for the gem5 simulator. It contains the full source code
