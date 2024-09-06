@@ -171,6 +171,11 @@ def addNoISAOptions(parser):
     )
 
     parser.add_argument("--memchecker", action="store_true")
+    
+    # DRAMSim3 option
+    # TW added
+    parser.add_argument("--dramsim3-ini", type=str, default=None,
+                      help = "dramsim3 config file")
 
     # Cache Options
     parser.add_argument(

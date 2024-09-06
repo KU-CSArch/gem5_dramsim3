@@ -39,7 +39,18 @@ from common import (
 )
 
 import m5.objects
+import os
 
+def dramsim3_size_mb(ini_file):
+    """Parsing ini file for DRAMsim3 so that the system knows mem size"""
+    assert(os.path.exists(ini_file))
+    import configparser
+    config = configparser.ConfigParser()
+    config.read(ini_file)
+    channel_size = config.getint("system", "channel_size")
+    num_channels = config.getint("system", "channels")
+    size_mb = channel_size * num_channels
+    return size_mb
 
 def create_mem_intf(intf, r, i, intlv_bits, intlv_size, xor_low_bit):
     """
@@ -65,6 +76,7 @@ def create_mem_intf(intf, r, i, intlv_bits, intlv_size, xor_low_bit):
     # Create an instance so we can figure out the address
     # mapping and row-buffer size
     interface = intf()
+    # 기존에는 ctrl = cls()
 
     # Only do this for DRAMs
     if issubclass(intf, m5.objects.DRAMInterface):
@@ -145,6 +157,21 @@ def config_mem(options, system):
     opt_mem_channels_intlv = getattr(options, "mem_channels_intlv", 128)
     opt_xor_low_bit = getattr(options, "xor_low_bit", 0)
 
+    # TW added
+    opt_dramsim3_ini = getattr(options, 'dramsim3_ini', None)
+
+    if opt_mem_type == "DRAMsim3":
+        ini_file = ''
+        if opt_dramsim3_ini:
+            ini_file = opt_dramsim3_ini
+        else:
+            ini_file = m5.objects.DRAMsim3.configFile
+        mem_size = dramsim3_size_mb(ini_file)
+        mem_size_str =  str(mem_size) + "MB"
+        options.mem_size = mem_size_str
+        system.mem_ranges = [m5.objects.AddrRange(mem_size_str)]
+    #added end
+
     if opt_mem_type == "HMC_2500_1x32":
         HMChost = HMC.config_hmc_host_ctrl(options, system)
         HMC.config_hmc_dev(options, system, HMChost.hmc_host)
@@ -214,7 +241,18 @@ def config_mem(options, system):
         range_iter += 1
 
         for i in range(nbr_mem_ctrls):
-            if opt_mem_type and (not opt_nvm_type or range_iter % 2 != 0):
+            # TW added
+            if opt_mem_type == 'DRAMsim3':
+                mem_ctrl = intf() #cls -> intf
+                if opt_dramsim3_ini:
+                    mem_ctrl.configFile = opt_dramsim3_ini
+                mem_ctrl.filePath = m5.options.outdir
+                mem_ctrl.range=m5.objects.AddrRange(r.size())
+                mem_ctrls.append(mem_ctrl)
+
+            # added end
+            
+            elif opt_mem_type and (not opt_nvm_type or range_iter % 2 != 0):
                 # Create the DRAM interface
                 dram_intf = create_mem_intf(
                     intf, r, i, intlv_bits, intlv_size, opt_xor_low_bit
