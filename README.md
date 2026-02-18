@@ -1,5 +1,5 @@
 # To run GEM5 with DRAMsim3 - added by Geonwoo, Seongpil, Taewoon
-###Notice
+### Notice
 - Make sure to clone DRAMsim3 at ext/dramsim3 and build follow the official DRAMsim3 repository (https://github.com/umd-memsys/DRAMsim3.git)
 - If a uint64_t error occurs, you should includethe "cstdint" library on top of src/mem/dramsim3_wrapper.cc
 
